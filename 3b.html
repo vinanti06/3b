@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Form Validation</title>
+    <style>
+        .error { color: red; }
+        input, select { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>Registration Form</h2>
+
+    <form id="regForm" onsubmit="return validateForm()">
+
+        Name: <br>
+        <input type="text" id="name"><br>
+        <span id="nameError" class="error"></span><br>
+
+        Email: <br>
+        <input type="text" id="email"><br>
+        <span id="emailError" class="error"></span><br>
+
+        Password: <br>
+        <input type="password" id="password"><br>
+        <span id="passwordError" class="error"></span><br>
+        
+        Age: <br>
+        <input type="text" id="age"><br>
+        <span id="ageError" class="error"></span><br>
+
+        Gender: <br>
+        <input type="radio" name="gender" value="Male"> Male
+        <input type="radio" name="gender" value="Female"> Female<br>
+        <span id="genderError" class="error"></span><br>
+
+        Hobbies (select at least one):<br>
+        <input type="checkbox" name="hobby" value="Reading"> Reading
+        <input type="checkbox" name="hobby" value="Sports"> Sports
+        <input type="checkbox" name="hobby" value="Music"> Music<br>
+        <span id="hobbyError" class="error"></span><br>
+
+        <button type="submit">Submit</button>
+
+    </form>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+
+            // Name validation
+            let name = document.getElementById("name").value.trim();
+            if (name == "" || !/^[A-Za-z ]+$/.test(name)) {
+                document.getElementById("nameError").innerText = "Please enter a valid name";
+                isValid = false;
+            } else {
+                document.getElementById("nameError").innerText = "";
+            }
+
+            // Email validation
+            let email = document.getElementById("email").value.trim();
+            if (email == "" || !/^\S+@\S+\.\S+$/.test(email)) {
+                document.getElementById("emailError").innerText = "Please enter a valid email";
+                isValid = false;
+            } else {
+                document.getElementById("emailError").innerText = "";
+            }
+
+            // Password validation
+            let password = document.getElementById("password").value;
+            if (password.length < 6) {
+                document.getElementById("passwordError").innerText = "Password must be at least 6 characters";
+                isValid = false;
+            } else {
+                document.getElementById("passwordError").innerText = "";
+            }
+
+            // Age validation
+            let age = document.getElementById("age").value.trim();
+            if (age == "" || isNaN(age) || age < 18 || age > 100) {
+                document.getElementById("ageError").innerText = "Enter age between 18 and 100";
+                isValid = false;
+            } else {
+                document.getElementById("ageError").innerText = "";
+            }
+
+            // Gender validation
+            let genderSelected = document.querySelector('input[name="gender"]:checked');
+            if (!genderSelected) {
+                document.getElementById("genderError").innerText = "Please select gender";
+                isValid = false;
+            } else {
+                document.getElementById("genderError").innerText = "";
+            }
+
+            // Hobby validation
+            let hobbies = document.querySelectorAll('input[name="hobby"]:checked');
+            if (hobbies.length == 0) {
+                document.getElementById("hobbyError").innerText = "Select at least one hobby";
+                isValid = false;
+            } else {
+                document.getElementById("hobbyError").innerText = "";
+            }
+
+            return isValid;
+        }
+    </script>
+
+</body>
+</html>
