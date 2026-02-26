@@ -2,109 +2,40 @@
 <html>
 <head>
     <title>Interactive Form Validation</title>
-    <style>
-        .error { color: red; }
-        input, select { margin-bottom: 10px; }
-    </style>
+    <style>.error { color: red; display: block; margin-bottom: 10px; }</style>
 </head>
 <body>
-
     <h2>Registration Form</h2>
-
     <form id="regForm" onsubmit="return validateForm()">
-
-        Name: <br>
-        <input type="text" id="name"><br>
-        <span id="nameError" class="error"></span><br>
-
-        Email: <br>
-        <input type="text" id="email"><br>
-        <span id="emailError" class="error"></span><br>
-
-        Password: <br>
-        <input type="password" id="password"><br>
-        <span id="passwordError" class="error"></span><br>
+        Name: <input type="text" id="name"><span id="nameErr" class="error"></span>
+        Email: <input type="text" id="email"><span id="emailErr" class="error"></span>
+        Password: <input type="password" id="pass"><span id="passErr" class="error"></span>
+        Age: <input type="text" id="age"><span id="ageErr" class="error"></span>
         
-        Age: <br>
-        <input type="text" id="age"><br>
-        <span id="ageError" class="error"></span><br>
-
-        Gender: <br>
-        <input type="radio" name="gender" value="Male"> Male
-        <input type="radio" name="gender" value="Female"> Female<br>
-        <span id="genderError" class="error"></span><br>
-
-        Hobbies (select at least one):<br>
-        <input type="checkbox" name="hobby" value="Reading"> Reading
-        <input type="checkbox" name="hobby" value="Sports"> Sports
-        <input type="checkbox" name="hobby" value="Music"> Music<br>
-        <span id="hobbyError" class="error"></span><br>
-
+        Gender: <input type="radio" name="gen" value="M"> M <input type="radio" name="gen" value="F"> F
+        <span id="genErr" class="error"></span>
+        
+        Hobbies: <input type="checkbox" name="h" value="R"> Reading <input type="checkbox" name="h" value="S"> Sports
+        <span id="hErr" class="error"></span>
+        
         <button type="submit">Submit</button>
-
     </form>
 
     <script>
         function validateForm() {
-            let isValid = true;
+            const get = id => document.getElementById(id);
+            const val = id => get(id).value.trim();
+            const setErr = (id, msg) => { get(id).innerText = msg; return msg === "" };
 
-            // Name validation
-            let name = document.getElementById("name").value.trim();
-            if (name == "" || !/^[A-Za-z ]+$/.test(name)) {
-                document.getElementById("nameError").innerText = "Please enter a valid name";
-                isValid = false;
-            } else {
-                document.getElementById("nameError").innerText = "";
-            }
+            let v1 = setErr("nameErr", !/^[A-Za-z ]+$/.test(val("name")) ? "Please enter a valid name" : "");
+            let v2 = setErr("emailErr", !/^\S+@\S+\.\S+$/.test(val("email")) ? "Please enter a valid email" : "");
+            let v3 = setErr("passErr", val("pass").length < 6 ? "Password must be at least 6 characters" : "");
+            let v4 = setErr("ageErr", (val("age")==="" || val("age")<18 || val("age")>100) ? "Enter age between 18-100" : "");
+            let v5 = setErr("genErr", !document.querySelector('input[name="gen"]:checked') ? "Select gender" : "");
+            let v6 = setErr("hErr", !document.querySelector('input[name="h"]:checked') ? "Select a hobby" : "");
 
-            // Email validation
-            let email = document.getElementById("email").value.trim();
-            if (email == "" || !/^\S+@\S+\.\S+$/.test(email)) {
-                document.getElementById("emailError").innerText = "Please enter a valid email";
-                isValid = false;
-            } else {
-                document.getElementById("emailError").innerText = "";
-            }
-
-            // Password validation
-            let password = document.getElementById("password").value;
-            if (password.length < 6) {
-                document.getElementById("passwordError").innerText = "Password must be at least 6 characters";
-                isValid = false;
-            } else {
-                document.getElementById("passwordError").innerText = "";
-            }
-
-            // Age validation
-            let age = document.getElementById("age").value.trim();
-            if (age == "" || isNaN(age) || age < 18 || age > 100) {
-                document.getElementById("ageError").innerText = "Enter age between 18 and 100";
-                isValid = false;
-            } else {
-                document.getElementById("ageError").innerText = "";
-            }
-
-            // Gender validation
-            let genderSelected = document.querySelector('input[name="gender"]:checked');
-            if (!genderSelected) {
-                document.getElementById("genderError").innerText = "Please select gender";
-                isValid = false;
-            } else {
-                document.getElementById("genderError").innerText = "";
-            }
-
-            // Hobby validation
-            let hobbies = document.querySelectorAll('input[name="hobby"]:checked');
-            if (hobbies.length == 0) {
-                document.getElementById("hobbyError").innerText = "Select at least one hobby";
-                isValid = false;
-            } else {
-                document.getElementById("hobbyError").innerText = "";
-            }
-
-            return isValid;
+            return v1 && v2 && v3 && v4 && v5 && v6;
         }
     </script>
-
 </body>
 </html>
